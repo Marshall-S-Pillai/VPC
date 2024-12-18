@@ -36,7 +36,7 @@ jobs:
       - name: Initialize Terraform for VPC
         run: |
           terraform init \
-          -backend-config="bucket=powertool1107" \
+          -backend-config="bucket=powertool9087" \
           -backend-config="key=vpc/${{ github.event.inputs.environment }}/terraform.tfstate" \
           -backend-config="region=us-east-1" \
           -backend-config="encrypt=true" \
@@ -55,7 +55,7 @@ jobs:
       - name: Initialize Terraform for Security Group
         run: |
           terraform init -reconfigure \
-          -backend-config="bucket=powertool1107" \
+          -backend-config="bucket=powertool9087" \
           -backend-config="key=security_group/${{ github.event.inputs.environment }}/terraform.tfstate" \
           -backend-config="region=us-east-1" \
           -backend-config="encrypt=true" \
@@ -74,7 +74,7 @@ jobs:
       - name: Initialize Terraform for Subnet
         run: |
           terraform init -reconfigure \
-          -backend-config="bucket=powertool1107" \
+          -backend-config="bucket=powertool9087" \
           -backend-config="key=subnet/${{ github.event.inputs.environment }}/terraform.tfstate" \
           -backend-config="region=us-east-1" \
           -backend-config="encrypt=true" \
