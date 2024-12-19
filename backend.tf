@@ -5,5 +5,5 @@ terraform {
     encrypt        = true
     versioning     = true
     dynamodb_table = "powertool"
-  }
+   }
 }
