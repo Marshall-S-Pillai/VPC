@@ -28,12 +28,11 @@ jobs:
       # VPC Module
       - name: Initialize Terraform for VPC module
         run: |
-          terraform init \
-          -backend-config="bucket=powertool9087" \
-          -backend-config="key=vpc/terraform.tfstate" \
-          -backend-config="region=us-east-1" \
-          -backend-config="encrypt=true" \
-          -backend-config="dynamodb_table=powertool"
+          terraform init   -backend-config="bucket=powertool9087" \
+                           -backend-config="key=vpc/terraform.tfstate" \
+                           -backend-config="region=us-east-1" \
+                           -backend-config="encrypt=true" \
+                           -backend-config="dynamodb_table=powertool"
 
       - name: Terraform Plan for VPC
         run: terraform plan -out=vpc-tfplan
@@ -61,11 +60,11 @@ jobs:
       - name: Initialize Terraform for Subnet module
         run: |
           terraform init -reconfigure \
-          -backend-config="bucket=powertool9087" \
-          -backend-config="key=subnet/terraform.tfstate" \
-          -backend-config="region=us-east-1" \
-          -backend-config="encrypt=true" \
-          -backend-config="dynamodb_table=powertool"
+                         -backend-config="bucket=powertool9087" \
+                         -backend-config="key=subnet/terraform.tfstate" \
+                         -backend-config="region=us-east-1" \
+                         -backend-config="encrypt=true" \
+                         -backend-config="dynamodb_table=powertool"
 
       - name: Terraform Plan for Subnet
         run: terraform plan -out=subnet-tfplan
