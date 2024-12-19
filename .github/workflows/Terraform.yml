@@ -3,7 +3,7 @@ name: Module
 on:
   workflow_dispatch:   
 
-jobs:
+jobs: 
   terraform:
     runs-on: ubuntu-latest
     steps:
