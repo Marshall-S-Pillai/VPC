@@ -52,7 +52,9 @@ jobs:
 
       - name: Terraform Plan for Security Group
         run: terraform plan -out=sg-tfplan
-
+        
+      - name: Terraform apply for security group 
+        run: terraform apply -out=sg-tfplan
      
 
       # Subnet Module
