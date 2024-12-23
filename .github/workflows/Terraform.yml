@@ -53,8 +53,7 @@ jobs:
       - name: Terraform Plan for Security Group
         run: terraform plan -out=sg-tfplan
 
-      - name: Apply Security Group Plan
-        run: terraform apply -auto-approve sg-tfplan
+     
 
       # Subnet Module
       - name: Initialize Terraform for Subnet module
