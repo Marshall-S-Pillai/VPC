@@ -9,7 +9,7 @@ on:
         default: 'dev'
         type: string
         options:
-          - dev
+          - dev 
           - staging
           - prod
 
