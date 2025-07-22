@@ -1,6 +1,4 @@
-terraform {
-  backend "s3" {}
-}
+
 resource "aws_security_group" "lab2" {
   name        = "lab2-security-group"
   description = "Security group for lab2"
