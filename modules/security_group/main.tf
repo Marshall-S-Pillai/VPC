@@ -1,6 +1,9 @@
+resource "random_id" "this" {
+  byte_length = 2
+}
 
 resource "aws_security_group" "lab2" {
-  name        = "lab3-security-group"
+  name        = "lab3-security-group-${random_id.this.hex}"
   description = "Security group for lab2"
 
   ingress {
