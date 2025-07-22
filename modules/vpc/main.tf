@@ -1,6 +1,4 @@
-terraform {
-  backend "s3" {}
-}
+
 resource "aws_vpc" "lab2" {
   cidr_block           = var.cidr_block
   enable_dns_support   = true
