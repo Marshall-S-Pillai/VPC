@@ -6,15 +6,19 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+
     steps:
+      # Checkout repo
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Set up Terraform
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: '1.5.0'
 
+      # Configure AWS credentials
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -23,7 +27,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       # VPC Module
-      - name: Init and Apply VPC Module
+      - name: Init & Apply VPC Module
         working-directory: modules/vpc
         run: |
           terraform init \
@@ -33,11 +37,16 @@ jobs:
             -backend-config="encrypt=true" \
             -backend-config="dynamodb_table=powertool" \
             -reconfigure
-          terraform plan -out=tfplan
+
+          terraform plan \
+            -var="vpc_name=dev-vpc" \
+            -var="cidr_block=10.0.0.0/16" \
+            -out=tfplan
+
           terraform apply -auto-approve tfplan
 
       # Security Group Module
-      - name: Init and Apply Security Group Module
+      - name: Init & Apply Security Group Module
         working-directory: modules/security_group
         run: |
           terraform init \
@@ -47,11 +56,16 @@ jobs:
             -backend-config="encrypt=true" \
             -backend-config="dynamodb_table=powertool" \
             -reconfigure
-          terraform plan -out=tfplan
+
+          terraform plan \
+            -var="security_group_name=web-sg" \
+            -var="vpc_id=vpc-12345678" \
+            -out=tfplan
+
           terraform apply -auto-approve tfplan
 
       # Subnet Module
-      - name: Init and Apply Subnet Module
+      - name: Init & Apply Subnet Module
         working-directory: modules/subnet
         run: |
           terraform init \
@@ -61,5 +75,12 @@ jobs:
             -backend-config="encrypt=true" \
             -backend-config="dynamodb_table=powertool" \
             -reconfigure
-          terraform plan -out=tfplan
+
+          terraform plan \
+            -var="subnet_name=public-subnet" \
+            -var="vpc_id=vpc-12345678" \
+            -var="cidr_block=10.0.1.0/24" \
+            -var="availability_zone=us-east-1a" \
+            -out=tfplan
+
           terraform apply -auto-approve tfplan
