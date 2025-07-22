@@ -1,12 +1,11 @@
-name: Module
+name: Module 
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:            
 
-jobs:
-  terraform:
+jobs: 
+  terraform:  
     runs-on: ubuntu-latest
-
     steps:
       # Checkout code
       - name: Checkout code
@@ -14,7 +13,7 @@ jobs:
 
       # Set up Terraform
       - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v2 
         with:
           terraform_version: '1.5.0'
 
@@ -28,72 +27,48 @@ jobs:
 
       # VPC Module
       - name: Initialize Terraform for VPC module
-        working-directory: modules/vpc
         run: |
-          terraform init \
-            -backend-config="bucket=powertool19087" \
-            -backend-config="key=vpc/terraform.tfstate" \
-            -backend-config="region=us-east-1" \
-            -backend-config="encrypt=true" \
-            -backend-config="dynamodb_table=powertool" \
-            -reconfigure
+          terraform init   -backend-config="bucket=powertool19087" \
+                           -backend-config="key=vpc/terraform.tfstate" \
+                           -backend-config="region=us-east-1" \
+                           -backend-config="encrypt=true" \
+                           -backend-config="dynamodb_table=powertool"
 
       - name: Terraform Plan for VPC
-        working-directory: modules/vpc
-        run: |
-          terraform plan \
-            -var="vpc_name=dev-vpc" \
-            -var="cidr_block=10.0.0.0/16" \
-            -out=vpc-tfplan
+        run: terraform plan -out=vpc-tfplan
 
       - name: Apply VPC Plan
-        working-directory: modules/vpc
         run: terraform apply -auto-approve vpc-tfplan
 
       # Security Group Module
       - name: Initialize Terraform for Security Group module
-        working-directory: modules/security_group
         run: |
           terraform init -reconfigure \
-            -backend-config="bucket=powertool19087" \
-            -backend-config="key=security_group/terraform.tfstate" \
-            -backend-config="region=us-east-1" \
-            -backend-config="encrypt=true" \
-            -backend-config="dynamodb_table=powertool"
+          -backend-config="bucket=powertool19087" \
+          -backend-config="key=security_group/terraform.tfstate" \
+          -backend-config="region=us-east-1" \
+          -backend-config="encrypt=true" \
+          -backend-config="dynamodb_table=powertool"
 
       - name: Terraform Plan for Security Group
-        working-directory: modules/security_group
-        run: |
-          terraform plan \
-            -var="security_group_name=web-sg" \
-            -var="vpc_id=vpc-12345678" \
-            -out=sg-tfplan
-
-      - name: Terraform Apply for Security Group
-        working-directory: modules/security_group
-        run: terraform apply -auto-approve sg-tfplan
+        run: terraform plan -out=sg-tfplan
+        
+      - name: Terraform apply for security group 
+        run: terraform apply -out=sg-tfplan
+     
 
       # Subnet Module
       - name: Initialize Terraform for Subnet module
-        working-directory: modules/subnet
         run: |
           terraform init -reconfigure \
-            -backend-config="bucket=powertool19087" \
-            -backend-config="key=subnet/terraform.tfstate" \
-            -backend-config="region=us-east-1" \
-            -backend-config="encrypt=true" \
-            -backend-config="dynamodb_table=powertool"
+                         -backend-config="bucket=powertool19087" \
+                         -backend-config="key=subnet/terraform.tfstate" \
+                         -backend-config="region=us-east-1" \
+                         -backend-config="encrypt=true" \
+                         -backend-config="dynamodb_table=powertool"
 
       - name: Terraform Plan for Subnet
-        working-directory: modules/subnet
-        run: |
-          terraform plan \
-            -var="subnet_name=public-subnet" \
-            -var="vpc_id=vpc-12345678" \
-            -var="cidr_block=10.0.1.0/24" \
-            -var="availability_zone=us-east-1a" \
-            -out=subnet-tfplan
+        run: terraform plan -out=subnet-tfplan
 
       - name: Apply Subnet Plan
-        working-directory: modules/subnet
         run: terraform apply -auto-approve subnet-tfplan
