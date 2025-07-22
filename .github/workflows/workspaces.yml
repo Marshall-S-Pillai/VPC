@@ -8,7 +8,7 @@ on:
         required: true  
         default: 'dev'
         type: string
-        options:
+        options:  
           - dev 
           - staging
           - prod
