@@ -38,7 +38,7 @@ jobs:
           -backend-config="bucket=powertool2026" \
           -backend-config="region=us-east-1" \
           -backend-config="encrypt=true" \
-          -backend-config="dynamodb_table=powertool"
+        
 
       - name: Select workspace
         run: |
