@@ -39,7 +39,7 @@ jobs:
                           -backend-config="key=vpc/${{ github.event.inputs.environment }}/terraform.tfstate" \
                           -backend-config="region=us-east-1" \
                           -backend-config="encrypt=true" \
-                          -backend-config="dynamodb_table=powertool"
+                         
 
       - name: Select workspace for VPC
         run: terraform workspace select "${{ github.event.inputs.environment }}" || terraform workspace new "${{ github.event.inputs.environment }}"
@@ -57,7 +57,7 @@ jobs:
                                        -backend-config="key=security_group/${{ github.event.inputs.environment }}/terraform.tfstate" \
                                        -backend-config="region=us-east-1" \
                                        -backend-config="encrypt=true" \
-                                       -backend-config="dynamodb_table=powertool"
+                                      
 
       - name: Select workspace for Security Group
         run: terraform workspace select "${{ github.event.inputs.environment }}" || terraform workspace new "${{ github.event.inputs.environment }}"
@@ -75,7 +75,7 @@ jobs:
                                       -backend-config="key=subnet/${{ github.event.inputs.environment }}/terraform.tfstate" \
                                       -backend-config="region=us-east-1" \
                                       -backend-config="encrypt=true" \
-                                      -backend-config="dynamodb_table=powertool"
+                                    
 
       - name: Select workspace for Subnet
         run: terraform workspace select "${{ github.event.inputs.environment }}" || terraform workspace new "${{ github.event.inputs.environment }}"
