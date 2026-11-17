@@ -1,0 +1,56 @@
+name: Terraform Capstone
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: capstone
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8
+
+      # Prefer GitHub OIDC with an AWS role; configure AWS_ROLE_ARN as a repository secret.
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Terraform Format
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Select workspace
+        run: terraform workspace select "${{ inputs.environment }}" || terraform workspace new "${{ inputs.environment }}"
+
+      - name: Terraform Plan
+        run: terraform plan -var="environment=${{ inputs.environment }}" -out=tfplan
+
+      - name: Terraform Apply
+        if: inputs.environment == 'dev'
+        run: terraform apply -auto-approve tfplan
